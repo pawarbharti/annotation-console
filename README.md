@@ -1,36 +1,181 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📋 Annotation Console
 
-## Getting Started
+A modern task management dashboard built with **Next.js**, **TypeScript**, **Redux Toolkit**, and **Material UI**.
 
-First, run the development server:
+This application displays annotation tasks, supports searching, filtering, sorting, task details, streaming summaries via Server-Sent Events (SSE), and live updates using WebSockets.
+
+---
+
+## Features
+
+- 📋 Task List with MUI DataGrid
+- 🔍 Search tasks by title
+- 🎯 Filter by Status
+- 🏷️ Filter by Type
+- ↕️ Client-side sorting
+- 📄 Task Details Drawer
+- 📡 Live task updates using WebSockets
+- 📝 Streaming Markdown Summary (SSE)
+- 🔒 Markdown sanitization using DOMPurify
+- ⚡ Redux Toolkit + Entity Adapter
+- 🌙 Dark Theme using Material UI
+- ⏳ Loading and Error States
+- 📱 Responsive UI
+
+---
+
+## Tech Stack
+
+- Next.js (App Router)
+- React
+- TypeScript
+- Redux Toolkit
+- Redux Entity Adapter
+- Material UI (MUI)
+- MUI DataGrid
+- React Markdown
+- DOMPurify
+- WebSocket
+- Server-Sent Events (SSE)
+
+---
+
+## Folder Structure
+
+```
+app/
+components/
+hooks/
+redux/
+services/
+styles/
+types/
+utils/
+mock-server/
+public/
+```
+
+---
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd annotation-console
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+---
+
+## Running the Application
+
+### Start the Next.js application
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Runs on:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+### Start the Mock Server
 
-To learn more about Next.js, take a look at the following resources:
+Open another terminal:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+cd mock-server
+npm install
+npm run mock
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Runs on:
 
-## Deploy on Vercel
+```
+http://localhost:4000
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+WebSocket endpoint:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+ws://localhost:4000/ws
+```
+
+---
+
+## Architecture
+
+The application follows a feature-based architecture.
+
+- **Redux Toolkit** manages application state.
+- **Entity Adapter** stores normalized task data.
+- **Selectors** provide derived state.
+- **Hooks** encapsulate API fetching and WebSocket subscriptions.
+- **Services** manage REST APIs and WebSocket communication.
+- **Components** are reusable and modular.
+
+---
+
+## Key Features Implemented
+
+- Server-side pagination
+- Search
+- Status filtering
+- Type filtering
+- Sorting
+- Task Details Drawer
+- Markdown rendering
+- XSS protection using DOMPurify
+- Streaming task summaries (SSE)
+- Live task updates (WebSocket)
+- Dark mode UI
+
+---
+
+## Design Decisions
+
+- Used Redux Entity Adapter for efficient CRUD operations.
+- Normalized inconsistent backend data before storing it.
+- Used MUI DataGrid for performance and built-in table functionality.
+- Sanitized streamed markdown before rendering to prevent XSS attacks.
+- Updated only affected entities on WebSocket events for better performance.
+
+---
+
+## Future Improvements
+
+- Unit & Integration Tests
+- Infinite Scrolling
+- Server-side Search & Filtering
+- Authentication
+- Virtualized Drawer Content
+
+---
+
+## Screenshots
+
+> Add screenshots here before submitting.
+
+Example:
+
+```
+public/screenshots/dashboard.png
+public/screenshots/drawer.png
+```
+
+---
+
+## Author
+
+**BHARTI PAWAR**

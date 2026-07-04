@@ -2,6 +2,7 @@
 
 import { TasksApiResponse } from "@/types";
 import { normalizeTasks } from "@/utils/normalize";
+import { normalizeTask } from "@/utils/normalize";
 import { API_BASE_URL } from "@/utils/constants";
 
 export interface FetchTasksParams {
@@ -27,4 +28,18 @@ export async function fetchTasks({
     ...data,
     items: normalizeTasks(data.items),
   };
+}
+
+export async function fetchTask(id: string) {
+  const response = await fetch(
+    `${API_BASE_URL}/api/tasks/${id}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch task");
+  }
+
+  const data = await response.json();
+
+  return normalizeTask(data);
 }

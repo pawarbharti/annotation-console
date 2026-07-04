@@ -55,8 +55,10 @@ export interface Task {
   type: TaskType;
   status: TaskStatus;
 
-  assignee: Assignee | null;
-
+  assignee: {
+    id: string;
+    name: string;
+  } | null;
   annotationCount: number;
 
   /**
@@ -65,5 +67,5 @@ export interface Task {
    */
   updatedAt: number;
 
-  meta: TaskMeta;
+   meta: TaskMeta;
 }

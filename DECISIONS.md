@@ -148,3 +148,26 @@ In a production system, search and filtering would typically be implemented on t
 The mock server can emit WebSocket events for tasks that are not currently loaded because the client uses server-side pagination.
 
 Updates are applied only to tasks that already exist in the Redux Entity Adapter store. Events for unloaded tasks are ignored and logged. In a production system, these events would typically be buffered until the task is loaded or would trigger a fetch for the missing task.
+
+
+## Part 2: Bug Hunt (`buggy/TaskTicker.tsx`)
+
+Fixes for the planted defects. The fixed component lives at `buggy/TaskTicker.tsx` and is covered by `tests/TaskTicker.test.tsx`; a manual harness is at `/ticker-test`.
+
+1. **Stale-closure clock (A).** The interval called `setTick(tick + 1)` with `[]` deps, so it closed over `tick = 0` and set `1` forever; React then bailed out on the repeated value and the "x seconds ago" labels froze. Fixed by storing the current time in state and refreshing it each second (`setNow(Date.now())`), which render reads directly — no captured value, no dead `tick`.
+
+2. **Fetching a null id (B).** The fetch effect ran on mount while `selectedId` was `null`, hitting `/api/tasks/null` (404). Fixed with an early `if (!selectedId) return;` guard.
+
+3. **State mutation + no re-render + duplicates (B).** `setTasks(prev => { prev.push(t); return prev; })` mutated the array and returned the same reference, so React skipped the render; it also appended a duplicate on every selection. Fixed by returning a new array and de-duping by id (`[...prev.filter(x => x.id !== t.id), t]`).
+
+4. **Mutating state during render (C).** `tasks.sort(...)` sorts in place, mutating Redux-independent React state on each render. Fixed by sorting a copy inside `useMemo` (`[...tasks].sort(...)`).
+
+5. **Array index as key.** `key={i}` tied React's identity to list position, so reordering/inserting attached state to the wrong row. Fixed with `key={t.id}` (stable, unique).
+
+6. **Stale-response race / no error handling (B).** Rapid selection changes could let an older response overwrite a newer one, and there was no `res.ok`/`catch` handling. Fixed with a `cancelled` flag in the effect cleanup plus a `res.ok` check and `.catch`.
+
+7. **Messy timestamp not normalized (B) — found, not planted.** The component's `Task` type assumes `updatedAt: number`, but `/api/tasks/:id` returns an ISO string for some tasks. `now - "2024-06-28T..."` is `NaN`, so those rows showed "NaNs ago". Fixed by typing the raw response (`RawTask`) and running `updatedAt` through the app's `normalizeTimestamp` before storing.
+
+**Additional observation (not a planted render bug):** the component only grows its list from clicks and starts empty, so it can never bootstrap itself. I added an optional `initialTasks` prop (defaults to `[]`, so existing usage is unchanged) to make it seedable and testable; in the real app this list would come from the store/props.
+
+-----

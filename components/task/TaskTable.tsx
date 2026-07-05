@@ -122,16 +122,25 @@ const columns: GridColDef[] = [
 
       const style = statusStyles[params.value] ?? statusStyles.UNKNOWN;
 
+      const statusLabels: Record<string, string> = {
+        TODO: "📝 TODO",
+        IN_PROGRESS: "🚀 IN PROGRESS",
+        DONE: "✅ DONE",
+        QA: "🔍 QA",
+        BLOCKED: "⛔ BLOCKED",
+        UNKNOWN: "❓ UNKNOWN",
+      };
+
       return (
         <Chip
-          label={params.value.replace("_", " ")}
+          label={statusLabels[params.value] ?? "❓ UNKNOWN"}
           size="small"
           sx={{
             bgcolor: style.bg,
             color: style.color,
             border: `1px solid ${style.border}`,
             fontWeight: 600,
-            minWidth: 110,
+            minWidth: 140,
             "& .MuiChip-label": {
               px: 1.5,
             },
@@ -170,18 +179,6 @@ export default function TaskTable() {
   const page = useAppSelector((state) => state.tasks.page);
   const pageSize = useAppSelector((state) => state.tasks.pageSize);
   const total = useAppSelector((state) => state.tasks.total);
-  if (!loading && tasks.length === 0) {
-    return (
-      <Alert
-        severity="info"
-        sx={{
-          mt: 3,
-        }}
-      >
-        No tasks found. Try changing your search or filters.
-      </Alert>
-    );
-  }
   // Loading
   if (loading) {
     return (

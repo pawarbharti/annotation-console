@@ -10,11 +10,14 @@ import TaskTable from "@/components/task/TaskTable";
 import { useAppSelector } from "@/redux/hooks";
 import { selectAllTasks } from "@/redux/tasks/selectors";
 import TaskDrawer from "@/components/taskDrawer/TaskDrawer";
+import Chip from "@mui/material/Chip";
+import { selectIsCache } from "@/redux/tasks/selectors";
 
 export default function Home() {
   useTasks();
   useTaskWebSocket();
 const tasks = useAppSelector(selectAllTasks);
+const isCache = useAppSelector(selectIsCache);
   return (
     <Box
       sx={{
@@ -42,9 +45,23 @@ const tasks = useAppSelector(selectAllTasks);
     📋 Annotation Console
   </Typography>
 
+  <Box
+  sx={{
+    display: "flex",
+    gap: 2,
+    alignItems: "center",
+  }}
+>
   <Typography color="gray">
     {tasks.length} Tasks
   </Typography>
+
+  <Chip
+    size="small"
+    label={isCache ? "Cached Data" : "Live Data"}
+    color={isCache ? "warning" : "success"}
+  />
+</Box>
 </Box>
 
       {/* Toolbar */}

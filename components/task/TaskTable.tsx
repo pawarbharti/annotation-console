@@ -1,7 +1,7 @@
 "use client";
 
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Alert, Box, Typography } from "@mui/material";
+import { Alert, Box } from "@mui/material";
 import { useAppDispatch } from "@/redux/hooks";
 import { setSelectedTask } from "@/redux/tasks/taskSlice";
 import { setPage } from "@/redux/tasks/taskSlice";
@@ -92,22 +92,14 @@ export default function TaskTable() {
   const total = useAppSelector((state) => state.tasks.total);
 if (!loading && tasks.length === 0) {
   return (
-    <Box
+    <Alert
+      severity="info"
       sx={{
-        height: 500,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        mt: 3,
       }}
     >
-        <Typography variant="h6">
-        🔍 No Tasks Found
-      </Typography>
-
-      <Typography color="text.secondary">
-        Try changing the search or filters.
-      </Typography>
-    </Box>
+      No tasks found. Try changing your search or filters.
+    </Alert>
   );
 }
   if (loading) {

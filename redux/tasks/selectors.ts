@@ -31,6 +31,9 @@ export const selectPage = (state: RootState) =>
 export const selectSelectedTaskId = (state: RootState) =>
   state.tasks.selectedTaskId;
 
+export const selectIsCache = (state: RootState) =>
+  state.tasks.isCache;
+
 export const selectFilteredTasks = createSelector(
   [
     selectAllTasks,

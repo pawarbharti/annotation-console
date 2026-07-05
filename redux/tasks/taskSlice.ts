@@ -3,6 +3,8 @@ import { taskAdapter } from "./taskAdapter";
 import { TaskFilters, SortBy } from "./taskTypes";
 import { getTasks } from "./taskThunks";
 import { normalizeTaskStatus } from "@/utils/normalize";
+import { Task } from "@/types/task";
+import { saveTasks } from "@/lib/db";
 interface TaskState {
   loading: boolean;
   error: string | null;
@@ -18,6 +20,7 @@ interface TaskState {
   filters: TaskFilters;
 
   sortBy: SortBy;
+  isCache: boolean;
 }
 
 const initialState = taskAdapter.getInitialState<TaskState>({
@@ -38,6 +41,7 @@ const initialState = taskAdapter.getInitialState<TaskState>({
   },
 
   sortBy: "updatedAt",
+  isCache: false,
 });
 
 const taskSlice = createSlice({
@@ -73,6 +77,12 @@ const taskSlice = createSlice({
     setPage(state, action: PayloadAction<number>) {
       state.page = action.payload;
     },
+    setCachedTasks(state, action: PayloadAction<Task[]>) {
+    taskAdapter.setAll(state, action.payload);
+    },
+    setCacheState(state, action: PayloadAction<boolean>) {
+  state.isCache = action.payload;
+},
     updateTaskStatus(
   state,
   action: PayloadAction<{
@@ -132,6 +142,7 @@ incrementAnnotation(
         state.loading = false;
 
         taskAdapter.setAll(state, action.payload.items);
+        void saveTasks(action.payload.items);   
 
         state.page = action.payload.page;
         state.pageSize = action.payload.pageSize;
@@ -156,6 +167,8 @@ export const {
   updateTaskStatus,
   updateTaskAssignee,
   incrementAnnotation,
+  setCachedTasks,
+  setCacheState
 } = taskSlice.actions;
 
 export default taskSlice.reducer;

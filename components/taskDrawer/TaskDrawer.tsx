@@ -91,7 +91,7 @@ export default function TaskDrawer() {
               </Typography>
 
               <Chip
-                label={task.status}
+                label={task.status.replace("_", " ")}
                 color={
                   task.status === "DONE"
                     ? "success"
@@ -120,7 +120,15 @@ export default function TaskDrawer() {
               </Typography>
 
               <Chip
-                label={task.type}
+                 label={
+    task.type === "IMAGE"
+      ? "🖼 Image"
+      : task.type === "TEXT"
+      ? "📄 Text"
+      : task.type === "AUDIO"
+      ? "🎧 Audio"
+      : "❓ Unknown"
+  }
                 variant="outlined"
                 size="small"
               />

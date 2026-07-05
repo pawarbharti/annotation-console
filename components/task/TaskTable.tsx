@@ -25,7 +25,54 @@ const columns: GridColDef[] = [
     headerName: "Type",
     flex: 1,
     renderCell: (params) => {
-      return <Chip label={params.value} variant="outlined" size="small" />;
+      const typeStyles: Record<
+        string,
+        {
+          bg: string;
+          color: string;
+          border: string;
+        }
+      > = {
+        IMAGE: {
+          bg: "#0f3d2e",
+          color: "#34d399",
+          border: "#10b981",
+        },
+        TEXT: {
+          bg: "#1e3a8a",
+          color: "#93c5fd",
+          border: "#3b82f6",
+        },
+        AUDIO: {
+          bg: "#4c1d95",
+          color: "#c4b5fd",
+          border: "#8b5cf6",
+        },
+        UNKNOWN: {
+          bg: "#374151",
+          color: "#d1d5db",
+          border: "#6b7280",
+        },
+      };
+
+      const style = typeStyles[params.value] ?? typeStyles.UNKNOWN;
+
+      return (
+        <Chip
+          label={params.value}
+          size="small"
+          sx={{
+            bgcolor: style.bg,
+            color: style.color,
+            border: `1px solid ${style.border}`,
+            fontWeight: 600,
+            minWidth: 74,
+            "& .MuiChip-label": {
+              px: 1.5,
+            },
+          }}
+        />
+      );
     },
   },
   {
@@ -33,23 +80,62 @@ const columns: GridColDef[] = [
     headerName: "Status",
     flex: 1,
     renderCell: (params) => {
-      const colorMap: Record<
+      const statusStyles: Record<
         string,
-        "success" | "warning" | "error" | "info" | "default"
+        {
+          bg: string;
+          color: string;
+          border: string;
+        }
       > = {
-        DONE: "success",
-        QA: "warning",
-        BLOCKED: "error",
-        IN_PROGRESS: "info",
-        TODO: "default",
-        UNKNOWN: "default",
+        TODO: {
+          bg: "#4c1d95",
+          color: "#e9d5ff",
+          border: "#8b5cf6",
+        },
+        IN_PROGRESS: {
+          bg: "#0c4a6e",
+          color: "#7dd3fc",
+          border: "#0ea5e9",
+        },
+        DONE: {
+          bg: "#14532d",
+          color: "#86efac",
+          border: "#22c55e",
+        },
+        QA: {
+          bg: "#7c2d12",
+          color: "#fdba74",
+          border: "#f97316",
+        },
+        BLOCKED: {
+          bg: "#7f1d1d",
+          color: "#fca5a5",
+          border: "#ef4444",
+        },
+        UNKNOWN: {
+          bg: "#374151",
+          color: "#d1d5db",
+          border: "#6b7280",
+        },
       };
+
+      const style = statusStyles[params.value] ?? statusStyles.UNKNOWN;
 
       return (
         <Chip
-          label={params.value}
-          color={colorMap[params.value] ?? "default"}
+          label={params.value.replace("_", " ")}
           size="small"
+          sx={{
+            bgcolor: style.bg,
+            color: style.color,
+            border: `1px solid ${style.border}`,
+            fontWeight: 600,
+            minWidth: 110,
+            "& .MuiChip-label": {
+              px: 1.5,
+            },
+          }}
         />
       );
     },
@@ -97,44 +183,44 @@ export default function TaskTable() {
     );
   }
   // Loading
-if (loading) {
-  return (
-    <Box sx={{ mt: 3 }}>
-      {[...Array(8)].map((_, index) => (
-        <Skeleton
-          key={index}
-          variant="rounded"
-          height={52}
-          sx={{
-            mb: 1,
-            borderRadius: 2,
-          }}
-        />
-      ))}
-    </Box>
-  );
-}
+  if (loading) {
+    return (
+      <Box sx={{ mt: 3 }}>
+        {[...Array(8)].map((_, index) => (
+          <Skeleton
+            key={index}
+            variant="rounded"
+            height={52}
+            sx={{
+              mb: 1,
+              borderRadius: 2,
+            }}
+          />
+        ))}
+      </Box>
+    );
+  }
 
-// Error
-if (error) {
-  return (
-    <Alert severity="error" sx={{ mt: 3 }}>
-      {error}
-    </Alert>
-  );
-}
+  // Error
+  if (error) {
+    return (
+      <Alert severity="error" sx={{ mt: 3 }}>
+        {error}
+      </Alert>
+    );
+  }
 
-// Empty State
-if (tasks.length === 0) {
-  return (
-    <Alert severity="info" sx={{ mt: 3 }}>
-      No tasks found. Try changing your search or filters.
-    </Alert>
-  );
-}
+  // Empty State
+  if (tasks.length === 0) {
+    return (
+      <Alert severity="info" sx={{ mt: 3 }}>
+        No tasks found. Try changing your search or filters.
+      </Alert>
+    );
+  }
 
   return (
-    <div className="mt-6 h-[600px] w-full overflow-hidden rounded-xl">
+    <div className="mt-3 h-[590px] w-full overflow-hidden rounded-xl">
       <DataGrid
         rows={tasks}
         columnHeaderHeight={44}

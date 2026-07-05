@@ -1,107 +1,68 @@
-# 📋 Annotation Console
+# Annotation Activity Console
 
-A modern Task Annotation Console built with Next.js, React, Redux Toolkit, Material UI, and TypeScript.
+A frontend take-home assignment built using **Next.js**, **TypeScript**, **Redux Toolkit**, and **Material UI**.
 
-This application displays paginated tasks, supports searching and filtering, provides a detailed task drawer with live markdown summaries, caches data in IndexedDB, and receives real-time updates through WebSockets.
-
----
-
-## ✨ Features
-
-### ✅ Task Management
-
-- Server-side paginated task list
-- Search tasks by title
-- Filter by Status
-- Filter by Type
-- Sortable task table
-- Loading & Error states
-
-### ✅ Task Drawer
-
-- View complete task details
-- Status & Type chips
-- Assignee
-- Annotation count
-- Updated timestamp
-- Metadata (Priority & Note)
-- Live streaming markdown summary
-
-### ✅ Markdown Summary
-
-- Streams summary using Server Sent Events (SSE)
-- Rendered with React Markdown
-- Supports Markdown formatting
-- XSS-safe using DOMPurify
-- Blocks malicious HTML/script tags
-
-### ✅ Real-Time Updates
-
-- WebSocket connection
-- Live status updates
-- Live assignee updates
-- Live annotation count updates
-- Automatic reconnect on disconnect
-
-### ✅ Offline Cache
-
-- IndexedDB caching
-- Cached data shown instantly
-- Fresh API data replaces cache
-- Live/Cached indicator
-
-### ✅ State Management
-
-- Redux Toolkit
-- Entity Adapter
-- Async Thunks
-- Memoized Selectors
+The application displays annotation tasks, supports real-time task updates using WebSocket, streams AI-generated summaries safely, and caches task data locally using IndexedDB.
 
 ---
 
-# 🛠 Tech Stack
+## Features
 
-- Next.js 16
-- React 19
+- Task list with pagination
+- Search tasks
+- Filter by status
+- Filter by type
+- Sort tasks by latest update
+- Task details drawer
+- AI-generated streaming summary
+- Safe Markdown rendering with XSS protection
+- Live task updates via WebSocket
+- Automatic WebSocket reconnect
+- IndexedDB cache with Cached/Live indicator
+- Redux Toolkit Entity Adapter
+- Jest unit tests
+
+---
+
+## Tech Stack
+
+- Next.js (App Router)
+- React
 - TypeScript
 - Redux Toolkit
 - Material UI
-- MUI DataGrid
-- IndexedDB (idb)
+- Axios
 - React Markdown
 - DOMPurify
-- rehype-raw
-- WebSocket
-- Server Sent Events (SSE)
+- IndexedDB (idb)
+- Jest
+- React Testing Library
 
 ---
 
-# 📁 Project Structure
+## Project Structure
 
 ```
 app/
 components/
-    task/
-    taskDrawer/
-    summary/
 hooks/
 redux/
-    tasks/
 services/
+styles/
+tests/
 types/
 utils/
-lib/
-mock-server/
 ```
 
 ---
 
-# 🚀 Installation
+## Installation
 
 Clone the repository
 
 ```bash
 git clone <repository-url>
+cd annotation-console
 ```
 
 Install dependencies
@@ -112,18 +73,20 @@ npm install
 
 ---
 
-# ⚙ Environment Variables
+## Environment Variables
 
 Create a `.env.local` file.
 
+Example:
+
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:4000
+NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
 NEXT_PUBLIC_WS_URL=ws://localhost:4000/ws
 ```
 
 ---
 
-# ▶ Start Mock Server
+## Start Mock Server
 
 ```bash
 cd mock-server
@@ -131,7 +94,7 @@ npm install
 npm run mock
 ```
 
-Runs on
+Server runs on
 
 ```
 http://localhost:4000
@@ -139,13 +102,13 @@ http://localhost:4000
 
 ---
 
-# ▶ Start Frontend
+## Start Application
 
 ```bash
 npm run dev
 ```
 
-Open
+Application runs at
 
 ```
 http://localhost:3000
@@ -153,110 +116,40 @@ http://localhost:3000
 
 ---
 
-# 🏗 Architecture
+## Run Tests
 
-The application follows a feature-based architecture.
-
-- API Layer
-- Redux Store
-- Entity Adapter
-- Memoized Selectors
-- Reusable Components
-- Hooks
-- Services
-- Utilities
-
-Task data is normalized before entering Redux to keep the UI independent from backend inconsistencies.
-
----
-
-# 🔄 Data Flow
-
-```
-Mock API
-     │
-     ▼
-normalize()
-     │
-     ▼
-Redux Toolkit
-     │
-     ▼
-Selectors
-     │
-     ▼
-Components
+```bash
+npm test
 ```
 
 ---
 
-# 📦 Caching
+## Lint
 
-Tasks are cached using IndexedDB.
-
-Flow:
-
-```
-Open App
-      │
-      ▼
-Read IndexedDB
-      │
-      ▼
-Show Cached Tasks
-      │
-      ▼
-Fetch Latest Tasks
-      │
-      ▼
-Update Redux
-      │
-      ▼
-Update IndexedDB
+```bash
+npm run lint
 ```
 
 ---
 
-# 🔌 Real-Time Updates
+## Production Build
 
-WebSocket events handled
-
-- task.updated
-- task.assigned
-- annotation.created
-
-Automatic reconnect is implemented when the socket disconnects.
+```bash
+npm run build
+```
 
 ---
 
-# 🔒 Security
+## Design Decisions
 
-Markdown summaries are sanitized using DOMPurify before rendering.
-
-Blocked elements include
-
-- `<script>`
-- `<img onerror>`
-- Inline JavaScript
-
-This prevents XSS attacks while still allowing Markdown formatting.
+Please refer to **DECISIONS.md** for architectural decisions, trade-offs, normalization strategy, caching, streaming, and WebSocket implementation details.
 
 ---
 
-# 📷 Screenshots
+## Notes
 
-- Task Table
-- Filters
-- Drawer
-- Markdown Summary
-- Live Updates
-
-(Add screenshots here if desired.)
-
----
-
-# 👨‍💻 Author
-
-Developed by **BHARTI PAWAR**
-
-Frontend Developer
+- API data is normalized before entering Redux.
+- WebSocket events update Redux state in real time.
+- AI summaries are streamed incrementally.
+- Markdown is sanitized before rendering.
+- Task list is cached locally using IndexedDB.

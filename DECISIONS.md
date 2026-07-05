@@ -55,12 +55,11 @@ When another task is selected, the previous request is cancelled using AbortCont
 
 ## Markdown Rendering
 
-Summaries are rendered using:
+Task summaries are rendered using **React Markdown**.
 
-- react-markdown
-- remark-gfm
+The application uses the `skipHtml` option provided by `react-markdown` to ignore any raw HTML received from the streaming API. This ensures that embedded HTML elements or scripts are **not rendered**, while still supporting standard Markdown features such as headings, lists, emphasis, and fenced code blocks.
 
-Raw HTML is sanitized before rendering using DOMPurify to prevent XSS attacks.
+Since the mock API primarily streams Markdown content, ignoring raw HTML provides a simple and secure approach that prevents HTML injection without requiring additional sanitization plugins.
 
 ---
 
@@ -134,3 +133,18 @@ ChatGPT was used as a development assistant for:
 - documentation
 
 All implementation decisions, integration, testing, and validation were performed manually.
+
+## Search and Filtering
+
+Search and filtering are currently applied to the tasks loaded in the Redux store for the active page.
+
+The mock API exposes server-side pagination (`page` and `pageSize`) but does not provide server-side search or filtering endpoints. To avoid downloading the complete dataset on every request, the application filters only the currently loaded page.
+
+In a production system, search and filtering would typically be implemented on the server (preferred for scalability) or by caching the complete dataset locally if the total number of tasks is reasonably small.
+
+
+## Handling WebSocket Events for Unloaded Tasks
+
+The mock server can emit WebSocket events for tasks that are not currently loaded because the client uses server-side pagination.
+
+Updates are applied only to tasks that already exist in the Redux Entity Adapter store. Events for unloaded tasks are ignored and logged. In a production system, these events would typically be buffered until the task is loaded or would trigger a fetch for the missing task.

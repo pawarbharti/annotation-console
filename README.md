@@ -31,9 +31,7 @@ The application displays annotation tasks, supports real-time task updates using
 - TypeScript
 - Redux Toolkit
 - Material UI
-- Axios
 - React Markdown
-- DOMPurify
 - IndexedDB (idb)
 - Jest
 - React Testing Library

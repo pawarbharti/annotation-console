@@ -96,42 +96,49 @@ export default function TaskTable() {
       </Alert>
     );
   }
-  if (loading) {
-    return (
-      <Box sx={{ mt: 3 }}>
-        {[...Array(8)].map((_, index) => (
-          <Skeleton
-            key={index}
-            variant="rounded"
-            height={52}
-            sx={{
-              mb: 1,
-              borderRadius: 2,
-            }}
-          />
-        ))}
-      </Box>
-    );
-  }
+  // Loading
+if (loading) {
+  return (
+    <Box sx={{ mt: 3 }}>
+      {[...Array(8)].map((_, index) => (
+        <Skeleton
+          key={index}
+          variant="rounded"
+          height={52}
+          sx={{
+            mb: 1,
+            borderRadius: 2,
+          }}
+        />
+      ))}
+    </Box>
+  );
+}
 
-  if (error) {
-    return (
-      <Alert severity="error" sx={{ mt: 3 }}>
-        {error}
-      </Alert>
-    );
-  }
+// Error
+if (error) {
+  return (
+    <Alert severity="error" sx={{ mt: 3 }}>
+      {error}
+    </Alert>
+  );
+}
+
+// Empty State
+if (tasks.length === 0) {
+  return (
+    <Alert severity="info" sx={{ mt: 3 }}>
+      No tasks found. Try changing your search or filters.
+    </Alert>
+  );
+}
 
   return (
-    <Box
-      sx={{
-        mt: 3,
-        height: 600,
-        width: "100%",
-      }}
-    >
+    <div className="mt-6 h-[600px] w-full overflow-hidden rounded-xl">
       <DataGrid
         rows={tasks}
+        columnHeaderHeight={44}
+        rowHeight={45}
         columns={columns}
         getRowId={(row) => row.id}
         pageSizeOptions={[10, 20, 50]}
@@ -161,34 +168,42 @@ export default function TaskTable() {
         }}
         sx={{
           border: "none",
-
           borderRadius: 3,
-
           backgroundColor: "#1E1E2E",
-
           color: "#fff",
 
           "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: "#2A2A40",
-            color: "#fff",
+            backgroundColor: "#374151 !important", // Tailwind gray-700
+            color: "#ffffff !important",
             fontWeight: "bold",
             fontSize: 15,
           },
 
-          "& .MuiDataGrid-cell": {
-            borderBottom: "1px solid #333",
+          "& .MuiDataGrid-columnHeader": {
+            backgroundColor: "#374151 !important",
+            color: "#ffffff !important",
           },
 
-          "& .MuiDataGrid-row:hover": {
-            backgroundColor: "#292940",
-            cursor: "pointer",
+          "& .MuiDataGrid-columnHeaderTitle": {
+            color: "#ffffff !important",
+            fontWeight: 700,
+          },
+
+          "& .MuiDataGrid-cell": {
+            borderBottom: "1px solid #374151",
           },
 
           "& .MuiDataGrid-footerContainer": {
-            backgroundColor: "#2A2A40",
+            backgroundColor: "#374151",
+            color: "#fff",
+          },
+
+          "& .MuiDataGrid-row:hover": {
+            backgroundColor: "#2d3748",
+            cursor: "pointer",
           },
         }}
       />
-    </Box>
+    </div>
   );
 }

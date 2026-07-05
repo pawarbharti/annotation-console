@@ -9,15 +9,19 @@ import {
 } from "@mui/material";
 
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setStatusFilter, setTypeFilter } from "@/redux/tasks/taskSlice";
-
+import {
+  setStatusFilter,
+  setTypeFilter,
+  setSortBy,
+} from "@/redux/tasks/taskSlice";
+import { SortBy } from "@/redux/tasks/taskTypes"; 
 import { selectFilters } from "@/redux/tasks/selectors";
 import { TaskStatus, TaskType } from "@/types";
 
 export default function TaskFilters() {
   const dispatch = useAppDispatch();
   const filters = useAppSelector(selectFilters);
-
+  const sortBy = useAppSelector((state) => state.tasks.sortBy);
   return (
     <Stack direction="row" spacing={2}>
       <FormControl
@@ -26,6 +30,7 @@ export default function TaskFilters() {
           minWidth: 180,
           "& .MuiOutlinedInput-root": {
             color: "#fff",
+            height: 42,
           },
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "#555",
@@ -55,13 +60,50 @@ export default function TaskFilters() {
           <MenuItem value="BLOCKED">Blocked</MenuItem>
         </Select>
       </FormControl>
+<FormControl
+  size="small"
+  sx={{
+    minWidth: 180,
+    "& .MuiOutlinedInput-root": {
+      color: "#fff",
+      height: 42,
+    },
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#555",
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#90caf9",
+    },
+    "& .MuiSvgIcon-root": {
+      color: "#fff",
+    },
+  }}
+>
+  <InputLabel sx={{ color: "#bbb" }}>Sort By</InputLabel>
 
+  <Select
+    label="Sort By"
+    value={sortBy}
+    onChange={(e) =>
+      dispatch(setSortBy(e.target.value as SortBy))
+    }
+  >
+    <MenuItem value="updatedAt">
+      Updated (Newest)
+    </MenuItem>
+
+    <MenuItem value="title">
+      Title (A-Z)
+    </MenuItem>
+  </Select>
+</FormControl>
       <FormControl
         size="small"
         sx={{
           minWidth: 180,
           "& .MuiOutlinedInput-root": {
             color: "#fff",
+            height: 42,
           },
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "#555",

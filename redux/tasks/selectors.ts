@@ -26,22 +26,49 @@ export const selectPage = (state: RootState) => state.tasks.page;
 export const selectSelectedTaskId = (state: RootState) =>
   state.tasks.selectedTaskId;
 
-export const selectIsCache = (state: RootState) => state.tasks.isCache;
+export const selectIsCache = (state: RootState) =>
+  state.tasks.isCache;
+
+export const selectSortBy = (state: RootState) =>
+  state.tasks.sortBy;
 
 export const selectFilteredTasks = createSelector(
-  [selectAllTasks, selectSearch, selectFilters],
-  (tasks, search, filters) => {
-    return tasks.filter((task) => {
+  [
+    selectAllTasks,
+    selectSearch,
+    selectFilters,
+    selectSortBy,
+  ],
+  (tasks, search, filters, sortBy) => {
+    const filtered = tasks.filter((task) => {
       const matchesSearch = task.title
         .toLowerCase()
         .includes(search.toLowerCase());
 
       const matchesStatus =
-        filters.status === "ALL" || task.status === filters.status;
+        filters.status === "ALL" ||
+        task.status === filters.status;
 
-      const matchesType = filters.type === "ALL" || task.type === filters.type;
+      const matchesType =
+        filters.type === "ALL" ||
+        task.type === filters.type;
 
-      return matchesSearch && matchesStatus && matchesType;
+      return (
+        matchesSearch &&
+        matchesStatus &&
+        matchesType
+      );
+    });
+
+    return [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case "title":
+          return a.title.localeCompare(b.title);
+
+        case "updatedAt":
+        default:
+          return b.updatedAt - a.updatedAt;
+      }
     });
   },
 );

@@ -83,40 +83,58 @@ const taskSlice = createSlice({
     setCacheState(state, action: PayloadAction<boolean>) {
       state.isCache = action.payload;
     },
-    updateTaskStatus(
-      state,
-      action: PayloadAction<{
-        id: string;
-        status: string;
-        updatedAt: number;
-      }>,
-    ) {
-      taskAdapter.updateOne(state, {
-        id: action.payload.id,
-        changes: {
-          status: normalizeTaskStatus(action.payload.status),
-          updatedAt: action.payload.updatedAt,
-        },
-      });
+  updateTaskStatus(
+  state,
+  action: PayloadAction<{
+    id: string;
+    status: string;
+    updatedAt: number;
+  }>
+) {
+  const task = state.entities[action.payload.id];
+
+  if (!task) {
+    console.warn(
+      `Received update for unloaded task: ${action.payload.id}`
+    );
+    return;
+  }
+
+  taskAdapter.updateOne(state, {
+    id: action.payload.id,
+    changes: {
+      status: normalizeTaskStatus(action.payload.status),
+      updatedAt: action.payload.updatedAt,
     },
+  });
+},
 
     updateTaskAssignee(
-      state,
-      action: PayloadAction<{
-        id: string;
-        assignee: {
-          id: string;
-          name: string;
-        } | null;
-      }>,
-    ) {
-      taskAdapter.updateOne(state, {
-        id: action.payload.id,
-        changes: {
-          assignee: action.payload.assignee,
-        },
-      });
+  state,
+  action: PayloadAction<{
+    id: string;
+    assignee: {
+      id: string;
+      name: string;
+    } | null;
+  }>
+) {
+  const task = state.entities[action.payload.id];
+
+  if (!task) {
+    console.warn(
+      `Received assignee update for unloaded task: ${action.payload.id}`
+    );
+    return;
+  }
+
+  taskAdapter.updateOne(state, {
+    id: action.payload.id,
+    changes: {
+      assignee: action.payload.assignee,
     },
+  });
+},
 
     incrementAnnotation(state, action: PayloadAction<string>) {
       const task = state.entities[action.payload];

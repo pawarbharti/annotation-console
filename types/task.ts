@@ -48,24 +48,23 @@ export interface TaskMeta {
  * Components and Redux should ONLY work with this model,
  * never with the raw API response.
  */
-export interface Task {
+export type NormalizedTaskType =
+  | { type: TaskType.IMAGE }
+  | { type: TaskType.AUDIO }
+  | { type: TaskType.TEXT }
+  | { type: TaskType.UNKNOWN };
+
+export type Task = {
   id: string;
   title: string;
 
-  type: TaskType;
   status: TaskStatus;
 
-  assignee: {
-    id: string;
-    name: string;
-  } | null;
+  assignee: Assignee | null;
+
   annotationCount: number;
 
-  /**
-   * Stored as Unix timestamp (milliseconds)
-   * for easy sorting and comparisons.
-   */
   updatedAt: number;
 
   meta: TaskMeta;
-}
+} & NormalizedTaskType;

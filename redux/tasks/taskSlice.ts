@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { taskAdapter } from "./taskAdapter";
 import { TaskFilters, SortBy } from "./taskTypes";
-import { getTasks } from "./taskThunks";
+import { getTasks, getTaskById } from "./taskThunks";
 import { normalizeTaskStatus } from "@/utils/normalize";
 import { Task } from "@/types/task";
 import { saveTasks } from "@/lib/db";
@@ -91,14 +91,9 @@ const taskSlice = createSlice({
     updatedAt: number;
   }>
 ) {
-  const task = state.entities[action.payload.id];
-
-  if (!task) {
-    console.warn(
-      `Received update for unloaded task: ${action.payload.id}`
-    );
-    return;
-  }
+  // Not loaded yet: the WS hook fetches its full record on demand, so we
+  // skip the partial update here rather than fabricate an entity.
+  if (!state.entities[action.payload.id]) return;
 
   taskAdapter.updateOne(state, {
     id: action.payload.id,
@@ -119,14 +114,8 @@ const taskSlice = createSlice({
     } | null;
   }>
 ) {
-  const task = state.entities[action.payload.id];
-
-  if (!task) {
-    console.warn(
-      `Received assignee update for unloaded task: ${action.payload.id}`
-    );
-    return;
-  }
+  // Not loaded yet: fetched on demand by the WS hook (see task.updated).
+  if (!state.entities[action.payload.id]) return;
 
   taskAdapter.updateOne(state, {
     id: action.payload.id,
@@ -167,6 +156,12 @@ const taskSlice = createSlice({
       .addCase(getTasks.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? "Something went wrong";
+      })
+
+      // A task referenced by a live event but not yet loaded: merge its full
+      // record in so the update is retained instead of dropped.
+      .addCase(getTaskById.fulfilled, (state, action) => {
+        taskAdapter.upsertOne(state, action.payload);
       });
   },
 });

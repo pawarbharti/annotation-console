@@ -1,3 +1,5 @@
+DECISIONS.md
+
 # Design Decisions
 
 ## State Management
@@ -113,13 +115,12 @@ The application handles:
 
 ## Testing
 
-Jest is configured for unit testing.
+Jest + React Testing Library are configured for unit and component tests:
 
-Normalization utilities are covered with unit tests to verify:
-
-- Status normalization
-- Task type normalization
-- Complete task normalization
+- **Normalizer** (`tests/normalize.test.ts`) — status, task type, and complete-task normalization.
+- **Selector** (`tests/selectors.test.ts`) — `selectFilteredTasks` search/status/type filtering and sort by updatedAt/title.
+- **Component (RTL)** (`tests/TaskTable.test.tsx`) — renders the empty state.
+- **Component (RTL)** (`tests/TaskTicker.test.tsx`) — covers the Part 2 fixes: no fetch when nothing is selected, fetch-by-id + de-dupe on repeat selection, and the elapsed-time label advancing with fake timers.
 
 ---
 
@@ -145,10 +146,13 @@ In a production system, search and filtering would typically be implemented on t
 
 ## Handling WebSocket Events for Unloaded Tasks
 
-The mock server can emit WebSocket events for tasks that are not currently loaded because the client uses server-side pagination.
+The mock server can emit WebSocket events for tasks that are not currently loaded because the client uses server-side pagination (the mock deliberately emits events for `t120`–`t136`).
 
-Updates are applied only to tasks that already exist in the Redux Entity Adapter store. Events for unloaded tasks are ignored and logged. In a production system, these events would typically be buffered until the task is loaded or would trigger a fetch for the missing task.
+When an event references a task that is **not** in the Redux Entity Adapter store, the `useTaskWebSocket` hook fetches that task's full record once from `/api/tasks/:id` (`getTaskById` thunk) and upserts it, so the live update merges in instead of being dropped. An in-flight `Set` de-dupes concurrent requests for the same id, and the update reducers (`updateTaskStatus` / `updateTaskAssignee`) no-op for ids that aren't loaded yet rather than fabricating a partial entity.
 
+Trade-off: because the store holds one page at a time, a fetched off-page task appears as an extra row until the next page load. This surfaces live activity rather than hiding it; the alternative would be to buffer the event and apply it only when its page loads (no extra rows, but the update isn't visible until you navigate there).
+
+---
 
 ## Part 2: Bug Hunt (`buggy/TaskTicker.tsx`)
 
@@ -169,5 +173,3 @@ Fixes for the planted defects. The fixed component lives at `buggy/TaskTicker.ts
 7. **Messy timestamp not normalized (B) — found, not planted.** The component's `Task` type assumes `updatedAt: number`, but `/api/tasks/:id` returns an ISO string for some tasks. `now - "2024-06-28T..."` is `NaN`, so those rows showed "NaNs ago". Fixed by typing the raw response (`RawTask`) and running `updatedAt` through the app's `normalizeTimestamp` before storing.
 
 **Additional observation (not a planted render bug):** the component only grows its list from clicks and starts empty, so it can never bootstrap itself. I added an optional `initialTasks` prop (defaults to `[]`, so existing usage is unchanged) to make it seedable and testable; in the real app this list would come from the store/props.
-
------

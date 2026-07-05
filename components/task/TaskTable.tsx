@@ -25,55 +25,62 @@ const columns: GridColDef[] = [
     headerName: "Type",
     flex: 1,
     renderCell: (params) => {
-      const typeStyles: Record<
-        string,
-        {
-          bg: string;
-          color: string;
-          border: string;
-        }
-      > = {
-        IMAGE: {
-          bg: "#0f3d2e",
-          color: "#34d399",
-          border: "#10b981",
-        },
-        TEXT: {
-          bg: "#1e3a8a",
-          color: "#93c5fd",
-          border: "#3b82f6",
-        },
-        AUDIO: {
-          bg: "#4c1d95",
-          color: "#c4b5fd",
-          border: "#8b5cf6",
-        },
-        UNKNOWN: {
-          bg: "#374151",
-          color: "#d1d5db",
-          border: "#6b7280",
-        },
-      };
-
-      const style = typeStyles[params.value] ?? typeStyles.UNKNOWN;
-
-      return (
-        <Chip
-          label={params.value}
-          size="small"
-          sx={{
-            bgcolor: style.bg,
-            color: style.color,
-            border: `1px solid ${style.border}`,
-            fontWeight: 600,
-            minWidth: 74,
-            "& .MuiChip-label": {
-              px: 1.5,
-            },
-          }}
-        />
-      );
+  const typeStyles: Record<
+    string,
+    {
+      bg: string;
+      color: string;
+      border: string;
+    }
+  > = {
+    IMAGE: {
+      bg: "#0f3d2e",
+      color: "#34d399",
+      border: "#10b981",
     },
+    TEXT: {
+      bg: "#1e3a8a",
+      color: "#93c5fd",
+      border: "#3b82f6",
+    },
+    AUDIO: {
+      bg: "#4c1d95",
+      color: "#c4b5fd",
+      border: "#8b5cf6",
+    },
+    UNKNOWN: {
+      bg: "#374151",
+      color: "#d1d5db",
+      border: "#6b7280",
+    },
+  };
+
+  const typeLabels: Record<string, string> = {
+    IMAGE: "🖼️ Image",
+    TEXT: "📄 Text",
+    AUDIO: "🎧 Audio",
+    UNKNOWN: "❓ Unknown",
+  };
+
+  const style = typeStyles[params.value] ?? typeStyles.UNKNOWN;
+
+  return (
+    <Chip
+      label={typeLabels[params.value] ?? "❓ Unknown"}
+      size="small"
+      sx={{
+        bgcolor: style.bg,
+        color: style.color,
+        border: `1px solid ${style.border}`,
+        fontWeight: 600,
+        minWidth: 110,
+        "& .MuiChip-label": {
+          px: 1.5,
+        },
+      }}
+    />
+  );
+},
   },
   {
     field: "status",
@@ -121,19 +128,9 @@ const columns: GridColDef[] = [
       };
 
       const style = statusStyles[params.value] ?? statusStyles.UNKNOWN;
-
-      const statusLabels: Record<string, string> = {
-        TODO: "📝 TODO",
-        IN_PROGRESS: "🚀 IN PROGRESS",
-        DONE: "✅ DONE",
-        QA: "🔍 QA",
-        BLOCKED: "⛔ BLOCKED",
-        UNKNOWN: "❓ UNKNOWN",
-      };
-
       return (
         <Chip
-          label={statusLabels[params.value] ?? "❓ UNKNOWN"}
+          label={params.value.replace("_", " ")}
           size="small"
           sx={{
             bgcolor: style.bg,

@@ -20,7 +20,7 @@ export default function TaskSummary({ taskId }: Props) {
 
   useEffect(() => {
     const source = new EventSource(
-      `${API_BASE_URL}/api/tasks/${taskId}/summary`
+      `${API_BASE_URL}/api/tasks/${taskId}/summary`,
     );
 
     source.onmessage = (event) => {
@@ -70,11 +70,7 @@ export default function TaskSummary({ taskId }: Props) {
         </Alert>
       )}
 
-    {!loading && !error && (
-  <ReactMarkdown skipHtml>
-    {summary}
-  </ReactMarkdown>
-)}
+      {!loading && !error && <ReactMarkdown skipHtml>{summary}</ReactMarkdown>}
     </>
   );
 }

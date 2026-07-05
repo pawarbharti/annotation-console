@@ -10,12 +10,9 @@ export interface FetchTasksParams {
   pageSize: number;
 }
 
-export async function fetchTasks({
-  page,
-  pageSize,
-}: FetchTasksParams) {
+export async function fetchTasks({ page, pageSize }: FetchTasksParams) {
   const response = await fetch(
-    `${API_BASE_URL}/api/tasks?page=${page}&pageSize=${pageSize}`
+    `${API_BASE_URL}/api/tasks?page=${page}&pageSize=${pageSize}`,
   );
 
   if (!response.ok) {
@@ -31,9 +28,7 @@ export async function fetchTasks({
 }
 
 export async function fetchTask(id: string) {
-  const response = await fetch(
-    `${API_BASE_URL}/api/tasks/${id}`
-  );
+  const response = await fetch(`${API_BASE_URL}/api/tasks/${id}`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch task");

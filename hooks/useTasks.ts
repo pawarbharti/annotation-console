@@ -14,25 +14,25 @@ export function useTasks() {
   const page = useAppSelector((state) => state.tasks.page);
   const pageSize = useAppSelector((state) => state.tasks.pageSize);
 
-useEffect(() => {
-  async function loadTasks() {
-  const cachedTasks = await getCachedTasks();
+  useEffect(() => {
+    async function loadTasks() {
+      const cachedTasks = await getCachedTasks();
 
-  if (cachedTasks.length > 0) {
-    dispatch(setCachedTasks(cachedTasks));
-    dispatch(setCacheState(true));
-  }
+      if (cachedTasks.length > 0) {
+        dispatch(setCachedTasks(cachedTasks));
+        dispatch(setCacheState(true));
+      }
 
-  await dispatch(
-    getTasks({
-      page,
-      pageSize,
-    })
-  );
+      await dispatch(
+        getTasks({
+          page,
+          pageSize,
+        }),
+      );
 
-  dispatch(setCacheState(false));
-}
+      dispatch(setCacheState(false));
+    }
 
-  loadTasks();
-}, [dispatch, page, pageSize]);
+    loadTasks();
+  }, [dispatch, page, pageSize]);
 }

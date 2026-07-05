@@ -55,7 +55,7 @@ const taskSlice = createSlice({
     },
 
     closeDrawer(state) {
-    state.selectedTaskId = null;
+      state.selectedTaskId = null;
     },
 
     setSearch(state, action: PayloadAction<string>) {
@@ -78,56 +78,53 @@ const taskSlice = createSlice({
       state.page = action.payload;
     },
     setCachedTasks(state, action: PayloadAction<Task[]>) {
-    taskAdapter.setAll(state, action.payload);
+      taskAdapter.setAll(state, action.payload);
     },
     setCacheState(state, action: PayloadAction<boolean>) {
-  state.isCache = action.payload;
-},
+      state.isCache = action.payload;
+    },
     updateTaskStatus(
-  state,
-  action: PayloadAction<{
-    id: string;
-    status: string;
-    updatedAt: number;
-  }>
-) {
-  taskAdapter.updateOne(state, {
-    id: action.payload.id,
-    changes: {
-      status: normalizeTaskStatus(action.payload.status),
-      updatedAt: action.payload.updatedAt,
+      state,
+      action: PayloadAction<{
+        id: string;
+        status: string;
+        updatedAt: number;
+      }>,
+    ) {
+      taskAdapter.updateOne(state, {
+        id: action.payload.id,
+        changes: {
+          status: normalizeTaskStatus(action.payload.status),
+          updatedAt: action.payload.updatedAt,
+        },
+      });
     },
-  });
-},
 
-updateTaskAssignee(
-  state,
-  action: PayloadAction<{
-    id: string;
-    assignee: {
-      id: string;
-      name: string;
-    } | null;
-  }>
-) {
-  taskAdapter.updateOne(state, {
-    id: action.payload.id,
-    changes: {
-      assignee: action.payload.assignee,
+    updateTaskAssignee(
+      state,
+      action: PayloadAction<{
+        id: string;
+        assignee: {
+          id: string;
+          name: string;
+        } | null;
+      }>,
+    ) {
+      taskAdapter.updateOne(state, {
+        id: action.payload.id,
+        changes: {
+          assignee: action.payload.assignee,
+        },
+      });
     },
-  });
-},
 
-incrementAnnotation(
-  state,
-  action: PayloadAction<string>
-) {
-  const task = state.entities[action.payload];
+    incrementAnnotation(state, action: PayloadAction<string>) {
+      const task = state.entities[action.payload];
 
-  if (!task) return;
+      if (!task) return;
 
-  task.annotationCount += 1;
-},
+      task.annotationCount += 1;
+    },
   },
 
   extraReducers: (builder) => {
@@ -142,7 +139,7 @@ incrementAnnotation(
         state.loading = false;
 
         taskAdapter.setAll(state, action.payload.items);
-        void saveTasks(action.payload.items);   
+        void saveTasks(action.payload.items);
 
         state.page = action.payload.page;
         state.pageSize = action.payload.pageSize;
@@ -168,7 +165,7 @@ export const {
   updateTaskAssignee,
   incrementAnnotation,
   setCachedTasks,
-  setCacheState
+  setCacheState,
 } = taskSlice.actions;
 
 export default taskSlice.reducer;

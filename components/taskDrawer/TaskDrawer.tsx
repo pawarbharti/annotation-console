@@ -10,10 +10,7 @@ import TaskSummary from "@/components/summary/TaskSummary";
 
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { closeDrawer } from "@/redux/tasks/taskSlice";
-import {
-  selectSelectedTaskId,
-  selectTaskById,
-} from "@/redux/tasks/selectors";
+import { selectSelectedTaskId, selectTaskById } from "@/redux/tasks/selectors";
 
 export default function TaskDrawer() {
   const dispatch = useAppDispatch();
@@ -21,9 +18,7 @@ export default function TaskDrawer() {
   const selectedTaskId = useAppSelector(selectSelectedTaskId);
 
   const task = useAppSelector((state) =>
-    selectedTaskId
-      ? selectTaskById(state, selectedTaskId)
-      : null
+    selectedTaskId ? selectTaskById(state, selectedTaskId) : null,
   );
 
   return (
@@ -54,9 +49,7 @@ export default function TaskDrawer() {
       <Divider sx={{ my: 2 }} />
 
       {!task ? (
-        <Typography color="text.secondary">
-          No task selected
-        </Typography>
+        <Typography color="text.secondary">No task selected</Typography>
       ) : (
         <>
           <Typography
@@ -69,11 +62,7 @@ export default function TaskDrawer() {
             {task.title}
           </Typography>
 
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ mb: 3 }}
-          >
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
             ID: {task.id}
           </Typography>
 
@@ -96,12 +85,12 @@ export default function TaskDrawer() {
                   task.status === "DONE"
                     ? "success"
                     : task.status === "BLOCKED"
-                    ? "error"
-                    : task.status === "QA"
-                    ? "warning"
-                    : task.status === "IN_PROGRESS"
-                    ? "info"
-                    : "default"
+                      ? "error"
+                      : task.status === "QA"
+                        ? "warning"
+                        : task.status === "IN_PROGRESS"
+                          ? "info"
+                          : "default"
                 }
                 size="small"
               />
@@ -120,28 +109,26 @@ export default function TaskDrawer() {
               </Typography>
 
               <Chip
-                 label={
-    task.type === "IMAGE"
-      ? "🖼 Image"
-      : task.type === "TEXT"
-      ? "📄 Text"
-      : task.type === "AUDIO"
-      ? "🎧 Audio"
-      : "❓ Unknown"
-  }
+                label={
+                  task.type === "IMAGE"
+                    ? "🖼 Image"
+                    : task.type === "TEXT"
+                      ? "📄 Text"
+                      : task.type === "AUDIO"
+                        ? "🎧 Audio"
+                        : "❓ Unknown"
+                }
                 variant="outlined"
                 size="small"
               />
             </Box>
 
             <Typography>
-              <strong>Assignee:</strong>{" "}
-              {task.assignee?.name ?? "Unassigned"}
+              <strong>Assignee:</strong> {task.assignee?.name ?? "Unassigned"}
             </Typography>
 
             <Typography>
-              <strong>Annotations:</strong>{" "}
-              {task.annotationCount}
+              <strong>Annotations:</strong> {task.annotationCount}
             </Typography>
 
             <Typography>
@@ -154,15 +141,13 @@ export default function TaskDrawer() {
 
             {task.meta.priority && (
               <Typography>
-                <strong>Priority:</strong>{" "}
-                {task.meta.priority}
+                <strong>Priority:</strong> {task.meta.priority}
               </Typography>
             )}
 
             {task.meta.note && (
               <Typography>
-                <strong>Note:</strong>{" "}
-                {task.meta.note}
+                <strong>Note:</strong> {task.meta.note}
               </Typography>
             )}
           </Box>

@@ -28,6 +28,4 @@ export interface AnnotationCreatedEvent {
 }
 
 export type WebSocketEvent =
-  | TaskUpdatedEvent
-  | TaskAssignedEvent
-  | AnnotationCreatedEvent;
+  TaskUpdatedEvent | TaskAssignedEvent | AnnotationCreatedEvent;

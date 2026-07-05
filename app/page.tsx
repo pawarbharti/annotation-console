@@ -16,8 +16,8 @@ import { selectIsCache } from "@/redux/tasks/selectors";
 export default function Home() {
   useTasks();
   useTaskWebSocket();
-const tasks = useAppSelector(selectAllTasks);
-const isCache = useAppSelector(selectIsCache);
+  const tasks = useAppSelector(selectAllTasks);
+  const isCache = useAppSelector(selectIsCache);
   return (
     <Box
       sx={{
@@ -29,56 +29,54 @@ const isCache = useAppSelector(selectIsCache);
     >
       {/* Heading */}
       <Box
-  sx={{
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    mb: 4,
-  }}
->
-  <Typography
-    variant="h4"
-    sx={{
-      fontWeight: 700,
-    }}
-  >
-    📋 Annotation Console
-  </Typography>
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 4,
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 700,
+          }}
+        >
+          📋 Annotation Console
+        </Typography>
 
-  <Box
-  sx={{
-    display: "flex",
-    gap: 2,
-    alignItems: "center",
-  }}
->
-  <Typography color="gray">
-    {tasks.length} Tasks
-  </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            gap: 2,
+            alignItems: "center",
+          }}
+        >
+          <Typography color="gray">{tasks.length} Tasks</Typography>
 
-  <Chip
-    size="small"
-    label={isCache ? "Cached Data" : "Live Data"}
-    color={isCache ? "warning" : "success"}
-  />
-</Box>
-</Box>
+          <Chip
+            size="small"
+            label={isCache ? "Cached Data" : "Live Data"}
+            color={isCache ? "warning" : "success"}
+          />
+        </Box>
+      </Box>
 
       {/* Toolbar */}
       <Box
-  sx={{
-    display: "flex",
-    gap: 2,
-    mb: 3,
-    flexWrap: "wrap",
-  }}
->
-  <Box sx={{ flex: 1, minWidth: 300 }}>
-    <TaskSearch />
-  </Box>
+        sx={{
+          display: "flex",
+          gap: 2,
+          mb: 3,
+          flexWrap: "wrap",
+        }}
+      >
+        <Box sx={{ flex: 1, minWidth: 300 }}>
+          <TaskSearch />
+        </Box>
 
-  <TaskFilters />
-</Box>
+        <TaskFilters />
+      </Box>
 
       {/* Task Table */}
       <TaskTable />

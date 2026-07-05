@@ -67,5 +67,5 @@ export interface Task {
    */
   updatedAt: number;
 
-   meta: TaskMeta;
+  meta: TaskMeta;
 }

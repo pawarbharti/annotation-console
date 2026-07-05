@@ -2,9 +2,7 @@ import { WebSocketEvent } from "@/types/websocket";
 
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL!;
 
-export function connectWebSocket(
-  onMessage: (event: WebSocketEvent) => void
-) {
+export function connectWebSocket(onMessage: (event: WebSocketEvent) => void) {
   let socket: WebSocket;
   let reconnectTimer: NodeJS.Timeout | null = null;
 
